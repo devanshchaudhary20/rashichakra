@@ -3,7 +3,7 @@
 Subcommands:
   render          Fetch all 12 horoscopes, render cover + 12 zodiac slides into posts/<date>/.
                   If any scrape fails, exits 0 cleanly and writes no pending file (skip day).
-  publish         Read state/_pending.json, post the carousel, record state.
+  publish         Read state/_pending.json, post to Instagram (splitting into 10-image carousels if needed).
                   If no pending file (because render skipped), exits 0 cleanly.
   all             render + publish in one go (for local testing).
 """
@@ -73,7 +73,7 @@ def render_step() -> dict | None:
     return info
 
 
-def publish_step(info: dict | None = None) -> str | None:
+def publish_step(info: dict | None = None) -> list[str] | None:
     if info is None:
         if not PENDING_FILE.exists():
             log.info("no pending render, nothing to publish (likely a skipped day)")
@@ -84,16 +84,21 @@ def publish_step(info: dict | None = None) -> str | None:
     config.assert_runtime_config()
 
     image_urls = [instagram_poster.public_image_url(p) for p in info["image_relpaths"]]
-    log.info("publishing carousel of %d images", len(image_urls))
+    log.info("publishing %d image(s) to Instagram", len(image_urls))
 
-    media_id = instagram_poster.post_carousel(image_urls, info["caption"])
-    _record_post(info, media_id)
+    media_ids = instagram_poster.post_carousel(image_urls, info["caption"])
+    log.info(
+        "published %d Instagram post(s): %s",
+        len(media_ids),
+        ", ".join(media_ids),
+    )
+    _record_post(info, media_ids)
     if PENDING_FILE.exists():
         PENDING_FILE.unlink()
-    return media_id
+    return media_ids
 
 
-def _record_post(info: dict, media_id: str) -> None:
+def _record_post(info: dict, media_ids: list[str]) -> None:
     POSTED_FILE.parent.mkdir(parents=True, exist_ok=True)
     if POSTED_FILE.exists():
         with POSTED_FILE.open("r", encoding="utf-8") as f:
@@ -103,7 +108,9 @@ def _record_post(info: dict, media_id: str) -> None:
     data.setdefault("posted", []).append(
         {
             "date": info["date"],
-            "ig_media_id": media_id,
+            "ig_media_ids": media_ids,
+            "ig_media_id": media_ids[0],
+            "instagram_posts": len(media_ids),
             "image_count": len(info["image_relpaths"]),
             "posted_at": datetime.now(timezone.utc).isoformat(),
         }

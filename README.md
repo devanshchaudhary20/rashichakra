@@ -15,7 +15,7 @@ Runs on GitHub Actions every morning (default 8:00 AM IST). No server needed.
 
 1. `src/main.py render` fetches all 12 horoscopes (scrape → LLM fallback), renders 13 JPGs into `posts/YYYY-MM-DD/`, and writes `state/_pending.json`.
 2. The workflow commits the new images so they're served at `raw.githubusercontent.com/<repo>/<branch>/posts/...`.
-3. `src/main.py publish` creates 13 child media containers, groups them as a CAROUSEL, polls until ready, then publishes to Instagram.
+3. `src/main.py publish` uploads **two** carousels of **7** slides each: date cover + six signs (Aries→Virgo), then the **same cover** again + six signs (Libra→Pisces); part 2 uses a short “part 2” caption.
 4. The post is logged to `state/posted.json` for that date.
 
 ## One-time setup
@@ -114,10 +114,7 @@ If anything fails, the most likely first-run problems are: workflow write perms 
 
 ## Carousel size
 
-Instagram has historically allowed 10 children per carousel via API; the limit was raised to 20 in 2024. We post 13 (1 cover + 12 signs). If a future API change rejects 13, two options:
-
-- Drop the cover slide — comment out `render_cover_slide` and adjust `render_all`. Brings count to 12.
-- Split into two carousels — cover + signs 1–10, then signs 11–12 next day, etc. (Wouldn't recommend; loses the "all signs in one swipe" UX.)
+The [Instagram Content Publishing API](https://developers.facebook.com/docs/instagram-platform/content-publishing/) allows **up to 10 images per carousel**. This project renders **13** JPGs on disk (cover + 12 signs) but publishes **14** carousel slots across two posts by **reusing the cover image URL** in part 2: **7 + 7** slides (cover+Aries…Virgo, then cover+Libra…Pisces).
 
 ## Troubleshooting
 
