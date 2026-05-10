@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Downloads SIL OFL fonts:
-#   Inter (regular + bold) — body text
+#   Elms Sans (regular) — body / horoscope text
 #   Playfair Display (bold) — display / sign names / dates
 
 set -euo pipefail
@@ -19,14 +19,9 @@ download() {
   curl -fsSL "$url" -o "$out"
 }
 
-# Inter is a variable font in google/fonts (square brackets URL-encoded)
 download \
-  "https://github.com/google/fonts/raw/main/ofl/inter/Inter%5Bopsz%2Cwght%5D.ttf" \
-  "$DIR/Inter-Regular.ttf"
-
-# Same file, used as 'Bold' alias (PIL truetype just reads weight from variation;
-# for simplicity we point both to the variable font and let the renderer use it as-is)
-cp "$DIR/Inter-Regular.ttf" "$DIR/Inter-Bold.ttf" || true
+  "https://github.com/mara-aa/elms-sans/raw/main/fonts/ttf/ElmsSans-Regular.ttf" \
+  "$DIR/ElmsSans-Regular.ttf"
 
 download \
   "https://github.com/google/fonts/raw/main/ofl/playfairdisplay/PlayfairDisplay%5Bwght%5D.ttf" \

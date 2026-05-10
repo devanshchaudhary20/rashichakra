@@ -95,6 +95,26 @@ def _fit_to_canvas(img: Image.Image) -> Image.Image:
     return img.resize((config.IMG_WIDTH, config.IMG_HEIGHT), Image.LANCZOS)
 
 
+def fits_on_slide(text: str) -> bool:
+    """Return True if *text* will fit in the body area of a zodiac slide."""
+    dummy = Image.new("RGB", (config.IMG_WIDTH, config.IMG_HEIGHT))
+    draw = ImageDraw.Draw(dummy)
+    name_font = _load_font(config.FONT_DISPLAY, config.SIGN_NAME_FONT_SIZE)
+    body_font = _load_font(config.FONT_BODY_REGULAR, config.HOROSCOPE_FONT_SIZE)
+
+    name_bbox = draw.textbbox((0, 0), "Sagittarius", font=name_font)  # widest name
+    name_h = name_bbox[3] - name_bbox[1]
+    body_y = 60 + name_h + 40
+
+    handle_reserve = (config.HANDLE_FONT_SIZE + 30 + 30) if config.IG_HANDLE else 0
+    available_h = config.IMG_HEIGHT - body_y - handle_reserve
+
+    max_text_w = config.IMG_WIDTH - 2 * config.SIDE_PADDING
+    lines = _wrap(text, body_font, draw, max_text_w)
+    line_h = config.HOROSCOPE_FONT_SIZE + config.LINE_SPACING
+    return len(lines) * line_h <= available_h
+
+
 def render_zodiac_slide(
     template_path: Path,
     zodiac: dict,

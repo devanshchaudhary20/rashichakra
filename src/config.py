@@ -27,15 +27,14 @@ COVER_IMAGE = os.getenv("COVER_IMAGE", "").strip()
 
 
 # --- Fonts ---------------------------------------------------------------
-FONT_BODY_REGULAR = FONTS_DIR / "Inter-Regular.ttf"
-FONT_BODY_BOLD = FONTS_DIR / "Inter-Bold.ttf"
+FONT_BODY_REGULAR = FONTS_DIR / "ElmsSans-Regular.ttf"
 FONT_DISPLAY = FONTS_DIR / "PlayfairDisplay-Bold.ttf"
 
 
 # --- Image render settings ----------------------------------------------
 IMG_WIDTH = 1080
 IMG_HEIGHT = 1350
-HOROSCOPE_FONT_SIZE = 36
+HOROSCOPE_FONT_SIZE = 28
 SIGN_NAME_FONT_SIZE = 64
 DATE_FONT_SIZE = 56
 HANDLE_FONT_SIZE = 26

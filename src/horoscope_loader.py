@@ -7,7 +7,7 @@ from __future__ import annotations
 import json
 import logging
 
-from . import config, rephraser, scraper
+from . import config, image_renderer, rephraser, scraper
 
 log = logging.getLogger(__name__)
 
@@ -30,6 +30,9 @@ def horoscope_all() -> list[dict]:
         try:
             text = scraper.fetch_horoscope(z["ganeshaspeaks_path"])
             text = rephraser.rephrase(text)
+            if not image_renderer.fits_on_slide(text):
+                log.info("%s text overflows slide, shortening...", z["slug"])
+                text = rephraser.shorten(text)
             out.append({**z, "horoscope": text})
             log.info("scraped %s OK (%d chars)", z["slug"], len(text))
         except Exception as e:  # noqa: BLE001
