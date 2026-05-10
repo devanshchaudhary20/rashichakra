@@ -175,16 +175,12 @@ def render_cover_slide(
     date_font = _load_font(config.FONT_DISPLAY, config.DATE_FONT_SIZE)
     date_str = today.strftime("%B %-d, %Y")  # e.g. May 9, 2026
 
-    # Centered, lower third
+    # Centered below the mantras (white space between ~22% and ~45% from top).
     bbox = draw.textbbox((0, 0), date_str, font=date_font)
     w = bbox[2] - bbox[0]
-    h = bbox[3] - bbox[1]
     x = (config.IMG_WIDTH - w) // 2
-    y = int(config.IMG_HEIGHT * 0.78) - h // 2
-    # Drop shadow + outline for legibility on any background
-    for ox, oy in [(-2, 0), (2, 0), (0, -2), (0, 2)]:
-        draw.text((x + ox, y + oy), date_str, font=date_font, fill=(0, 0, 0))
-    draw.text((x, y), date_str, font=date_font, fill=config.DATE_COLOR)
+    y = int(config.IMG_HEIGHT * 0.28)
+    draw.text((x, y), date_str, font=date_font, fill=config.COVER_DATE_COLOR)
 
     output_path.parent.mkdir(parents=True, exist_ok=True)
     img.convert("RGB").save(output_path, "JPEG", quality=92, optimize=True)
