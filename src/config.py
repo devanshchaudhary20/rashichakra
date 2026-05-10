@@ -40,16 +40,10 @@ SIGN_NAME_FONT_SIZE = 64
 DATE_FONT_SIZE = 56
 HANDLE_FONT_SIZE = 26
 
-TEXT_COLOR = (245, 240, 230)
-DATE_COLOR = (245, 240, 230)
+TEXT_COLOR = (0, 0, 0)
+DATE_COLOR = (0, 0, 0)
 SIDE_PADDING = 100
 LINE_SPACING = 10
-TEXT_PANEL_OPACITY = 130  # 0-255
-
-# Zodiac slide layout: text panel occupies the RIGHT portion of the image so
-# the zodiac art on the left is fully visible.
-TEXT_PANEL_X_FRAC = float(os.getenv("TEXT_PANEL_X_FRAC", "0.48"))  # panel starts at this fraction of IMG_WIDTH
-TEXT_PANEL_PADDING = 45  # horizontal padding inside the right panel
 
 
 # --- LLM rephraser -------------------------------------------------------

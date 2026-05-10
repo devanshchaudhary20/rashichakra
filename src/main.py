@@ -33,7 +33,7 @@ def build_caption(today: date, horoscopes: list[dict]) -> str:
         "",
     ]
     for h in horoscopes:
-        lines.append(f"{h['emoji']} {h['name_en']} ({h['date_range']})")
+        lines.append(f"{h['name_en']} ({h['date_range']})")
     if config.IG_HANDLE:
         lines.extend(["", f"Follow {config.IG_HANDLE} for daily horoscopes."])
     lines.extend(["", config.HASHTAGS])

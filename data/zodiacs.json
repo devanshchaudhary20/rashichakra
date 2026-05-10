@@ -4,24 +4,22 @@
     "name_en": "Aries",
     "name_sa": "मेष",
     "name_iast": "Meṣa",
-    "image_filename": "aries.jpeg",
+    "image_filename": "aries.png",
     "ganeshaspeaks_path": "horoscopes/daily-horoscope/aries/",
     "date_range": "Mar 21 – Apr 19",
     "ruling_planet": "Mars",
-    "element": "Fire",
-    "emoji": "♈"
+    "element": "Fire"
   },
   {
     "slug": "taurus",
     "name_en": "Taurus",
     "name_sa": "वृषभ",
     "name_iast": "Vṛṣabha",
-    "image_filename": "tauras.png",
+    "image_filename": "taurus.png",
     "ganeshaspeaks_path": "horoscopes/daily-horoscope/taurus/",
     "date_range": "Apr 20 – May 20",
     "ruling_planet": "Venus",
-    "element": "Earth",
-    "emoji": "♉"
+    "element": "Earth"
   },
   {
     "slug": "gemini",
@@ -32,8 +30,7 @@
     "ganeshaspeaks_path": "horoscopes/daily-horoscope/gemini/",
     "date_range": "May 21 – Jun 20",
     "ruling_planet": "Mercury",
-    "element": "Air",
-    "emoji": "♊"
+    "element": "Air"
   },
   {
     "slug": "cancer",
@@ -44,20 +41,18 @@
     "ganeshaspeaks_path": "horoscopes/daily-horoscope/cancer/",
     "date_range": "Jun 21 – Jul 22",
     "ruling_planet": "Moon",
-    "element": "Water",
-    "emoji": "♋"
+    "element": "Water"
   },
   {
     "slug": "leo",
     "name_en": "Leo",
     "name_sa": "सिंह",
     "name_iast": "Siṁha",
-    "image_filename": "Leo.png",
+    "image_filename": "leo.png",
     "ganeshaspeaks_path": "horoscopes/daily-horoscope/leo/",
     "date_range": "Jul 23 – Aug 22",
     "ruling_planet": "Sun",
-    "element": "Fire",
-    "emoji": "♌"
+    "element": "Fire"
   },
   {
     "slug": "virgo",
@@ -68,20 +63,18 @@
     "ganeshaspeaks_path": "horoscopes/daily-horoscope/virgo/",
     "date_range": "Aug 23 – Sep 22",
     "ruling_planet": "Mercury",
-    "element": "Earth",
-    "emoji": "♍"
+    "element": "Earth"
   },
   {
     "slug": "libra",
     "name_en": "Libra",
     "name_sa": "तुला",
     "name_iast": "Tulā",
-    "image_filename": "libra.jpeg",
+    "image_filename": "libra.png",
     "ganeshaspeaks_path": "horoscopes/daily-horoscope/libra/",
     "date_range": "Sep 23 – Oct 22",
     "ruling_planet": "Venus",
-    "element": "Air",
-    "emoji": "♎"
+    "element": "Air"
   },
   {
     "slug": "scorpio",
@@ -92,20 +85,18 @@
     "ganeshaspeaks_path": "horoscopes/daily-horoscope/scorpio/",
     "date_range": "Oct 23 – Nov 21",
     "ruling_planet": "Mars/Pluto",
-    "element": "Water",
-    "emoji": "♏"
+    "element": "Water"
   },
   {
     "slug": "sagittarius",
     "name_en": "Sagittarius",
     "name_sa": "धनु",
     "name_iast": "Dhanu",
-    "image_filename": "sagittarius.jpeg",
+    "image_filename": "sagittarius.png",
     "ganeshaspeaks_path": "horoscopes/daily-horoscope/sagittarius/",
     "date_range": "Nov 22 – Dec 21",
     "ruling_planet": "Jupiter",
-    "element": "Fire",
-    "emoji": "♐"
+    "element": "Fire"
   },
   {
     "slug": "capricorn",
@@ -116,8 +107,7 @@
     "ganeshaspeaks_path": "horoscopes/daily-horoscope/capricorn/",
     "date_range": "Dec 22 – Jan 19",
     "ruling_planet": "Saturn",
-    "element": "Earth",
-    "emoji": "♑"
+    "element": "Earth"
   },
   {
     "slug": "aquarius",
@@ -128,8 +118,7 @@
     "ganeshaspeaks_path": "horoscopes/daily-horoscope/aquarius/",
     "date_range": "Jan 20 – Feb 18",
     "ruling_planet": "Saturn/Uranus",
-    "element": "Air",
-    "emoji": "♒"
+    "element": "Air"
   },
   {
     "slug": "pisces",
@@ -140,7 +129,6 @@
     "ganeshaspeaks_path": "horoscopes/daily-horoscope/pisces/",
     "date_range": "Feb 19 – Mar 20",
     "ruling_planet": "Jupiter/Neptune",
-    "element": "Water",
-    "emoji": "♓"
+    "element": "Water"
   }
 ]

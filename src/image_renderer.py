@@ -124,7 +124,7 @@ def render_zodiac_slide(
     body_font = _load_font(config.FONT_BODY_REGULAR, config.HOROSCOPE_FONT_SIZE)
     handle_font = _load_font(config.FONT_BODY_REGULAR, config.HANDLE_FONT_SIZE)
 
-    name_text = f"{zodiac['name_en']}  {zodiac['emoji']}"
+    name_text = zodiac['name_en']
 
     # Sign name — vertically centered in the upper quarter of the panel.
     bbox = draw.textbbox((0, 0), name_text, font=name_font)
