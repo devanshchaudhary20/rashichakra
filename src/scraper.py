@@ -23,6 +23,19 @@ def _clean(text: str) -> str:
     return text
 
 
+def _dedup_sentences(text: str) -> str:
+    """Remove duplicate sentences while preserving order."""
+    sentences = re.split(r"(?<=[.!?])\s+", text)
+    seen: set[str] = set()
+    unique: list[str] = []
+    for s in sentences:
+        key = s.strip().lower()
+        if key and key not in seen:
+            seen.add(key)
+            unique.append(s.strip())
+    return " ".join(unique)
+
+
 def fetch_horoscope(zodiac_path: str, timeout: int = 20) -> str:
     """Fetch and parse the daily horoscope for one sign.
 
@@ -64,7 +77,7 @@ def fetch_horoscope(zodiac_path: str, timeout: int = 20) -> str:
     paragraphs = soup.find_all("p")
     if paragraphs:
         longest = max(paragraphs, key=lambda p: len(p.get_text(strip=True)))
-        text = _clean(longest.get_text(" ", strip=True))
+        text = _dedup_sentences(_clean(longest.get_text(" ", strip=True)))
         if len(text) > 50:
             return text
 
@@ -79,10 +92,9 @@ def _extract_paragraphs(node) -> Optional[str]:
         if t and len(t) > 30:
             chunks.append(t)
     if not chunks:
-        text = _clean(node.get_text(" ", strip=True))
+        text = _dedup_sentences(_clean(node.get_text(" ", strip=True)))
         if len(text) > 50:
             return text
         return None
-    # Limit length so it fits on the image
-    full = " ".join(chunks)
+    full = _dedup_sentences(" ".join(chunks))
     return full

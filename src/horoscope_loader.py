@@ -7,7 +7,7 @@ from __future__ import annotations
 import json
 import logging
 
-from . import config, scraper
+from . import config, rephraser, scraper
 
 log = logging.getLogger(__name__)
 
@@ -29,6 +29,7 @@ def horoscope_all() -> list[dict]:
     for z in zodiacs:
         try:
             text = scraper.fetch_horoscope(z["ganeshaspeaks_path"])
+            text = rephraser.rephrase(text)
             out.append({**z, "horoscope": text})
             log.info("scraped %s OK (%d chars)", z["slug"], len(text))
         except Exception as e:  # noqa: BLE001

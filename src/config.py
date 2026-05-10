@@ -44,11 +44,16 @@ TEXT_COLOR = (245, 240, 230)
 DATE_COLOR = (245, 240, 230)
 SIDE_PADDING = 100
 LINE_SPACING = 10
-TEXT_PANEL_OPACITY = 110  # 0-255
+TEXT_PANEL_OPACITY = 130  # 0-255
 
-# Vertical positioning of horoscope text within each zodiac slide:
-# the text panel sits in the lower portion so the zodiac art shows above.
-HOROSCOPE_TEXT_TOP_FRAC = 0.55  # text starts at 55% down the image
+# Zodiac slide layout: text panel occupies the RIGHT portion of the image so
+# the zodiac art on the left is fully visible.
+TEXT_PANEL_X_FRAC = float(os.getenv("TEXT_PANEL_X_FRAC", "0.48"))  # panel starts at this fraction of IMG_WIDTH
+TEXT_PANEL_PADDING = 45  # horizontal padding inside the right panel
+
+
+# --- LLM rephraser -------------------------------------------------------
+ANTHROPIC_API_KEY = os.getenv("ANTHROPIC_API_KEY", "")
 
 
 # --- Instagram API -------------------------------------------------------
