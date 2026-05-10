@@ -47,6 +47,7 @@ SIDE_PADDING = 100
 LINE_SPACING = 10
 
 
+
 # --- LLM rephraser -------------------------------------------------------
 ANTHROPIC_API_KEY = os.getenv("ANTHROPIC_API_KEY", "")
 
