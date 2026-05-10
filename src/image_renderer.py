@@ -101,24 +101,15 @@ def render_zodiac_slide(
     horoscope_text: str,
     output_path: Path,
 ) -> Path:
-    """Overlay the zodiac name + daily horoscope on the right-side panel."""
+    """Overlay the zodiac name + daily horoscope centered from the top."""
     base = Image.open(template_path).convert("RGB")
     base = _fit_to_canvas(base).convert("RGBA")
 
-    # Dark panel covering the right portion of the image so zodiac art shows on the left.
-    panel_x = int(config.IMG_WIDTH * config.TEXT_PANEL_X_FRAC)
-    panel = Image.new("RGBA", (config.IMG_WIDTH, config.IMG_HEIGHT), (0, 0, 0, 0))
-    pdraw = ImageDraw.Draw(panel)
-    pdraw.rectangle(
-        [(panel_x, 0), (config.IMG_WIDTH, config.IMG_HEIGHT)],
-        fill=(0, 0, 0, config.TEXT_PANEL_OPACITY),
-    )
-    img = Image.alpha_composite(base, panel)
+    img = base
     draw = ImageDraw.Draw(img)
 
-    panel_w = config.IMG_WIDTH - panel_x
-    center_x = panel_x + panel_w // 2
-    max_text_w = panel_w - 2 * config.TEXT_PANEL_PADDING
+    center_x = config.IMG_WIDTH // 2
+    max_text_w = config.IMG_WIDTH - 2 * config.SIDE_PADDING
 
     name_font = _load_font(config.FONT_DISPLAY, config.SIGN_NAME_FONT_SIZE)
     body_font = _load_font(config.FONT_BODY_REGULAR, config.HOROSCOPE_FONT_SIZE)
@@ -126,27 +117,18 @@ def render_zodiac_slide(
 
     name_text = f"{zodiac['name_en']}  {zodiac['emoji']}"
 
-    # Sign name — vertically centered in the upper quarter of the panel.
+    # Sign name at the top with some breathing room.
     bbox = draw.textbbox((0, 0), name_text, font=name_font)
     name_h = bbox[3] - bbox[1]
-    name_y = int(config.IMG_HEIGHT * 0.12)
+    name_y = 60
     _draw_block(draw, [name_text], name_font, center_x, name_y, 0, config.TEXT_COLOR)
 
-    # Horoscope body, wrapped and centered in the remaining vertical space.
+    # Horoscope body immediately below the sign name.
     lines = _wrap(horoscope_text, body_font, draw, max_text_w)
     body_y = name_y + name_h + 40
-
-    # Vertically center the body block between the name and the handle area.
-    handle_reserve = 80 if config.IG_HANDLE else 0
-    available_h = config.IMG_HEIGHT - body_y - handle_reserve - 40
-    line_h = body_font.size + config.LINE_SPACING
-    block_h = len(lines) * line_h
-    if block_h < available_h:
-        body_y += (available_h - block_h) // 2
-
     _draw_block(draw, lines, body_font, center_x, body_y, config.LINE_SPACING, config.TEXT_COLOR)
 
-    # @handle pinned to bottom-center of the panel.
+    # @handle pinned to bottom-center.
     if config.IG_HANDLE:
         bbox = draw.textbbox((0, 0), config.IG_HANDLE, font=handle_font)
         w = bbox[2] - bbox[0]
