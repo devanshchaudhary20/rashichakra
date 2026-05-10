@@ -35,7 +35,7 @@ jobs:
         uses: actions/cache@v4
         with:
           path: fonts
-          key: fonts-v1
+          key: fonts-v2
 
       - name: Download fonts
         if: steps.cache-fonts.outputs.cache-hit != 'true'
