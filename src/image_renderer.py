@@ -65,7 +65,6 @@ def _draw_block(
     top_y: int,
     line_spacing: int,
     fill: tuple[int, int, int],
-    shadow: bool = True,
 ) -> int:
     y = top_y
     for line in lines:
@@ -73,8 +72,6 @@ def _draw_block(
         w = bbox[2] - bbox[0]
         h = bbox[3] - bbox[1]
         x = center_x - w // 2
-        if shadow:
-            draw.text((x + 2, y + 2), line, font=font, fill=(0, 0, 0, 200))
         draw.text((x, y), line, font=font, fill=fill)
         y += h + line_spacing
     return y
@@ -175,13 +172,23 @@ def render_cover_slide(
     draw = ImageDraw.Draw(img)
 
     date_font = _load_font(config.FONT_DISPLAY, config.DATE_FONT_SIZE)
+    title_font = _load_font(config.FONT_BODY_REGULAR, config.SIGN_NAME_FONT_SIZE)
     date_str = today.strftime("%B %-d, %Y")  # e.g. May 9, 2026
 
-    # Centered below the mantras (white space between ~22% and ~45% from top).
-    bbox = draw.textbbox((0, 0), date_str, font=date_font)
-    w = bbox[2] - bbox[0]
-    x = (config.IMG_WIDTH - w) // 2
-    y = int(config.IMG_HEIGHT * 0.28)
+    # "Daily Horoscope" above the date, centered below the mantras.
+    title_str = "Daily Horoscope"
+    title_bbox = draw.textbbox((0, 0), title_str, font=title_font)
+    title_w = title_bbox[2] - title_bbox[0]
+    title_h = title_bbox[3] - title_bbox[1]
+    title_x = (config.IMG_WIDTH - title_w) // 2
+    title_y = int(config.IMG_HEIGHT * 0.26)
+    draw.text((title_x, title_y), title_str, font=title_font, fill=config.COVER_DATE_COLOR)
+
+    # Date below the title.
+    date_bbox = draw.textbbox((0, 0), date_str, font=date_font)
+    date_w = date_bbox[2] - date_bbox[0]
+    x = (config.IMG_WIDTH - date_w) // 2
+    y = title_y + title_h + 20
     draw.text((x, y), date_str, font=date_font, fill=config.COVER_DATE_COLOR)
 
     output_path.parent.mkdir(parents=True, exist_ok=True)
