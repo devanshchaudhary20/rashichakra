@@ -211,14 +211,13 @@ def post_carousel(image_urls: list[str], caption: str) -> list[str]:
 
     media_ids: list[str] = []
 
-    print(
-        f"[rashichakra] post 1/2: {len(first)} images (cover + six signs)"
-    )
+    print(f"[rashichakra] post 1/2: {len(first)} images (cover + six signs)")
     media_ids.append(_post_single_carousel(first, caption))
 
-    print(
-        f"[rashichakra] post 2/2: {len(second)} images (cover + remaining signs)"
-    )
+    print("[rashichakra] waiting 60s before post 2/2 to avoid rate limiting...")
+    time.sleep(60)
+
+    print(f"[rashichakra] post 2/2: {len(second)} images (cover + remaining signs)")
     cap2 = _continuation_caption(2, 2)
     media_ids.append(_post_single_carousel(second, cap2))
 
