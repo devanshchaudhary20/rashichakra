@@ -176,7 +176,7 @@ def render_cover_slide(
     date_str = today.strftime("%B %-d, %Y")  # e.g. May 9, 2026
 
     # "Daily Horoscope" above the date, centered below the mantras.
-    title_str = "Daily Horoscope"
+    title_str = "Swipe to know Daily Horoscope"
     title_bbox = draw.textbbox((0, 0), title_str, font=title_font)
     title_w = title_bbox[2] - title_bbox[0]
     title_h = title_bbox[3] - title_bbox[1]

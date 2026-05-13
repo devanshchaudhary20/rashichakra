@@ -73,7 +73,9 @@ def render_step() -> dict | None:
     return info
 
 
-def publish_step(info: dict | None = None) -> list[str] | None:
+def publish_step(info: dict | None = None, part: int | None = None) -> list[str] | None:
+    """Publish the carousel. If part=1, post only the first batch and keep _pending.json.
+    If part=2, post only the second batch and clean up. If part=None, post everything."""
     if info is None:
         if not PENDING_FILE.exists():
             log.info("no pending render, nothing to publish (likely a skipped day)")
@@ -84,16 +86,14 @@ def publish_step(info: dict | None = None) -> list[str] | None:
     config.assert_runtime_config()
 
     image_urls = [instagram_poster.public_image_url(p) for p in info["image_relpaths"]]
-    log.info("publishing %d image(s) to Instagram", len(image_urls))
+    log.info("publishing %d image(s) to Instagram (part=%s)", len(image_urls), part or "all")
 
-    media_ids = instagram_poster.post_carousel(image_urls, info["caption"])
-    log.info(
-        "published %d Instagram post(s): %s",
-        len(media_ids),
-        ", ".join(media_ids),
-    )
+    media_ids = instagram_poster.post_carousel(image_urls, info["caption"], part=part)
+    log.info("published %d Instagram post(s): %s", len(media_ids), ", ".join(media_ids))
+
     _record_post(info, media_ids)
-    if PENDING_FILE.exists():
+    # Only clean up after the final part so part2 workflow can still read the file.
+    if part != 1 and PENDING_FILE.exists():
         PENDING_FILE.unlink()
     return media_ids
 
@@ -123,7 +123,9 @@ def parse_args(argv: list[str] | None = None) -> argparse.Namespace:
     p = argparse.ArgumentParser(description="Rashichakra daily horoscope poster.")
     sub = p.add_subparsers(dest="cmd", required=True)
     sub.add_parser("render", help="Fetch + render only.")
-    sub.add_parser("publish", help="Publish previously-rendered carousel.")
+    pub = sub.add_parser("publish", help="Publish previously-rendered carousel.")
+    pub.add_argument("--part", type=int, choices=[1, 2], default=None,
+                     help="Post only part 1 or part 2 (omit to post both).")
     sub.add_parser("all", help="Render and publish in one go.")
     return p.parse_args(argv)
 
@@ -133,7 +135,7 @@ def main(argv: list[str] | None = None) -> int:
     if args.cmd == "render":
         render_step()
     elif args.cmd == "publish":
-        publish_step()
+        publish_step(part=getattr(args, "part", None))
     elif args.cmd == "all":
         info = render_step()
         if info is not None:

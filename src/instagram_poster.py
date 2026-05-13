@@ -181,11 +181,14 @@ def _post_standalone_image(image_url: str, caption: str) -> str:
     return media_id
 
 
-def post_carousel(image_urls: list[str], caption: str) -> list[str]:
+def post_carousel(image_urls: list[str], caption: str, part: int | None = None) -> list[str]:
     """Publish feed content in two posts when there are more than 7 images.
 
     Slide order from `render_all` is: cover, then zodiacs.json order (Aries … Pisces).
-    Post 1: cover + first six signs. Post 2: **same cover** again + last six signs (7 slides).
+    Post 1: cover + first six signs. Post 2: same cover + last six signs.
+
+    Pass part=1 to post only the first batch, part=2 for only the second,
+    or part=None to post both in sequence.
     """
     if not image_urls:
         raise ValueError("post_carousel: empty image_urls")
@@ -200,7 +203,6 @@ def post_carousel(image_urls: list[str], caption: str) -> list[str]:
     cover_url = image_urls[0]
     first = image_urls[:FIRST_POST_IMAGE_COUNT]
     tail = image_urls[FIRST_POST_IMAGE_COUNT:]
-    # Second carousel: repeat cover so both posts open with the date slide.
     second = [cover_url] + tail
 
     if len(second) > MAX_CAROUSEL_ITEMS:
@@ -211,14 +213,13 @@ def post_carousel(image_urls: list[str], caption: str) -> list[str]:
 
     media_ids: list[str] = []
 
-    print(f"[rashichakra] post 1/2: {len(first)} images (cover + six signs)")
-    media_ids.append(_post_single_carousel(first, caption))
+    if part in (None, 1):
+        print(f"[rashichakra] post 1/2: {len(first)} images (cover + six signs)")
+        media_ids.append(_post_single_carousel(first, caption))
 
-    print("[rashichakra] waiting 600s before post 2/2 to avoid rate limiting...")
-    time.sleep(600)
-
-    print(f"[rashichakra] post 2/2: {len(second)} images (cover + remaining signs)")
-    cap2 = _continuation_caption(2, 2)
-    media_ids.append(_post_single_carousel(second, cap2))
+    if part in (None, 2):
+        cap2 = _continuation_caption(2, 2)
+        print(f"[rashichakra] post 2/2: {len(second)} images (cover + remaining signs)")
+        media_ids.append(_post_single_carousel(second, cap2))
 
     return media_ids

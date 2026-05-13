@@ -1,20 +1,22 @@
-name: Daily Horoscope Carousel
+name: Daily Horoscope Carousel (part 2)
 
 on:
   schedule:
-    # 02:30 UTC = 8:00 AM IST (people check horoscope in the morning)
-    - cron: '30 2 * * *'
+    # 03:00 UTC = 30 min after post.yml (02:30 UTC)
+    - cron: '0 3 * * *'
   workflow_dispatch:
 
 permissions:
   contents: write
 
 jobs:
-  post:
+  post2:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
         uses: actions/checkout@v4
+        with:
+          ref: main
 
       - name: Set up Python
         uses: actions/setup-python@v5
@@ -41,33 +43,21 @@ jobs:
         if: steps.cache-fonts.outputs.cache-hit != 'true'
         run: bash scripts/download_fonts.sh
 
-      - name: Render horoscopes
-        env:
-          IG_HANDLE: ${{ vars.IG_HANDLE }}
-        run: python -m src.main render
-
-      - name: Commit rendered images
-        run: |
-          git config user.name  "rashichakra-bot"
-          git config user.email "github-actions@users.noreply.github.com"
-          git add posts/ state/_pending.json
-          git commit -m "Render daily horoscope [skip ci]" || { echo "Nothing to commit"; exit 0; }
-          git pull --rebase origin main
-          git push
-
-      - name: Publish carousel (part 1)
+      - name: Publish carousel (part 2)
         env:
           IG_LONG_LIVED_TOKEN: ${{ secrets.IG_LONG_LIVED_TOKEN }}
           IG_USER_ID:          ${{ secrets.IG_USER_ID }}
           IG_APP_ID:           ${{ secrets.IG_APP_ID }}
           IG_APP_SECRET:       ${{ secrets.IG_APP_SECRET }}
           GITHUB_REPO:         ${{ github.repository }}
-          GITHUB_BRANCH:       ${{ github.ref_name }}
+          GITHUB_BRANCH:       main
           IG_HANDLE:           ${{ vars.IG_HANDLE }}
-        run: python -m src.main publish --part 1
+        run: python -m src.main publish --part 2
 
       - name: Commit posted-state log
         run: |
+          git config user.name  "rashichakra-bot"
+          git config user.email "github-actions@users.noreply.github.com"
           git add -A state/
           if git diff --staged --quiet; then
             echo "Nothing to commit"
