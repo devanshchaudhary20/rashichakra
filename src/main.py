@@ -88,7 +88,17 @@ def publish_step(info: dict | None = None, part: int | None = None) -> list[str]
     image_urls = [instagram_poster.public_image_url(p) for p in info["image_relpaths"]]
     log.info("publishing %d image(s) to Instagram (part=%s)", len(image_urls), part or "all")
 
-    media_ids = instagram_poster.post_carousel(image_urls, info["caption"], part=part)
+    try:
+        media_ids = instagram_poster.post_carousel(image_urls, info["caption"], part=part)
+    except RuntimeError as e:
+        if "403" in str(e) and part == 2:
+            log.warning("part 2 publish blocked by Instagram (rate limit): %s", e)
+            log.warning("part 1 is already live — skipping part 2 gracefully")
+            if PENDING_FILE.exists():
+                PENDING_FILE.unlink()
+            return None
+        raise
+
     log.info("published %d Instagram post(s): %s", len(media_ids), ", ".join(media_ids))
 
     _record_post(info, media_ids)

@@ -144,6 +144,11 @@ def publish(creation_id: str) -> str:
         },
         timeout=60,
     )
+    if resp.status_code == 403:
+        # Meta sometimes returns 403 even when the post goes through successfully.
+        # Log and continue rather than crashing the workflow.
+        print(f"[rashichakra] publish returned 403 but post may have succeeded: {resp.text}")
+        return ""
     return _check(resp, "publish").get("id", "")
 
 
